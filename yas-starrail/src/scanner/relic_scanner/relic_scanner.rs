@@ -348,8 +348,8 @@ impl StarRailRelicScanner {
             window_info_clone: window_info.clone(),
             game_info,
             match_colors_star: [
-                Color::new(113, 119, 139), // todo
-                Color::new(42, 143, 114), // todo
+                Color::new(144, 144, 154), // 1
+                Color::new(75, 146, 146), // 2
                 Color::new(96, 142, 197), // 3
                 Color::new(157, 117, 206), // 4
                 Color::new(193, 158, 112), // 5
