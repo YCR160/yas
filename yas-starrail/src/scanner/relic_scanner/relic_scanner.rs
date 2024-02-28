@@ -17,7 +17,7 @@ pub struct StarRailRelicScanResult {
     pub sub_stat_value: [String; 4],
     pub equip: String,
     pub level: i32,
-    pub star: i32,
+    pub rarity: i32,
     pub lock: bool,
     pub discard: bool,
 }
@@ -144,7 +144,7 @@ impl RelicScannerWorker {
             ],
             level: parse_level(&str_level)?,
             equip: item.equip + &str_equip,
-            star: item.star as i32,
+            rarity: item.rarity as i32,
             lock: item.lock,
             discard: item.discard,
         })
@@ -246,7 +246,7 @@ struct RelicScannerWindowInfo {
     pub equipper_pos: Pos,
     pub item_count_rect: Rect,
 
-    pub star_pos: Pos,
+    pub rarity_pos: Pos,
     pub lock_pos: Pos,
     pub discard_pos: Pos,
 
@@ -266,7 +266,7 @@ impl From<&WindowInfo> for RelicScannerWindowInfo {
             equip_rect: value.get("starrail_relic_equip_rect").unwrap(),
             equipper_pos: value.get("starrail_relic_equipper_pos").unwrap(),
             item_count_rect: value.get("starrail_relic_item_count_rect").unwrap(),
-            star_pos: value.get("starrail_relic_star_pos").unwrap(),
+            rarity_pos: value.get("starrail_relic_rarity_pos").unwrap(),
             lock_pos: value.get("starrail_relic_lock_pos").unwrap(),
             discard_pos: value.get("starrail_relic_discard_pos").unwrap(),
 
@@ -297,7 +297,7 @@ pub struct StarRailRelicScanner {
 
     game_info: GameInfo,
 
-    match_colors_star: [Color; 5],
+    match_colors_rarity: [Color; 5],
     match_colors_lock: [Color; 3],
     match_colors_discard: [Color; 3],
     match_colors_equipper: [(&'static str, Color); 43],
@@ -315,7 +315,7 @@ impl RequireWindowInfo for StarRailRelicScanner {
         window_info_builder.add_required_key("starrail_relic_equip_rect");
         window_info_builder.add_required_key("starrail_relic_equipper_pos");
         window_info_builder.add_required_key("starrail_relic_item_count_rect");
-        window_info_builder.add_required_key("starrail_relic_star_pos");
+        window_info_builder.add_required_key("starrail_relic_rarity_pos");
         window_info_builder.add_required_key("starrail_relic_lock_pos");
         window_info_builder.add_required_key("starrail_relic_discard_pos");
         window_info_builder.add_required_key("starrail_repository_item_col");
@@ -334,7 +334,7 @@ impl RequireWindowInfo for StarRailRelicScanner {
 struct SendItem {
     panel_image: RgbImage,
     equip: String,
-    star: usize,
+    rarity: usize,
     lock: bool,
     discard: bool,
 }
@@ -347,7 +347,7 @@ impl StarRailRelicScanner {
             window_info: RelicScannerWindowInfo::from(window_info),
             window_info_clone: window_info.clone(),
             game_info,
-            match_colors_star: [
+            match_colors_rarity: [
                 Color::new(144, 144, 154), // 1
                 Color::new(75, 146, 146), // 2
                 Color::new(96, 142, 197), // 3
@@ -415,11 +415,11 @@ impl StarRailRelicScanner {
 }
 
 impl StarRailRelicScanner {
-    pub fn get_star(&self) -> Result<usize> {
-        let pos = self.window_info.origin_pos + self.window_info.star_pos;
+    pub fn get_rarity(&self) -> Result<usize> {
+        let pos = self.window_info.origin_pos + self.window_info.rarity_pos;
         let color = capture::get_color(pos)?;
 
-        let (index, _) = self.match_colors_star
+        let (index, _) = self.match_colors_rarity
             .iter()
             .enumerate()
             .min_by_key(|&(_, match_color)| match_color.distance(&color))
@@ -573,20 +573,20 @@ impl StarRailRelicScanner {
                     // let image = self.capture_panel().unwrap();
                     let panel_image = controller.borrow().capture_panel().unwrap();
                     let equip = self.get_equipper().unwrap();
-                    let star = self.get_star().unwrap();
+                    let rarity = self.get_rarity().unwrap();
                     let lock = self.get_lock().unwrap();
                     let discard = self.get_discard().unwrap();
 
                     // todo normalize types
-                    if (star as i32) < self.scanner_config.min_star {
+                    if (rarity as i32) < self.scanner_config.min_rarity {
                         info!(
                             "找到满足最低星级要求 {} 的物品，准备退出……",
-                            self.scanner_config.min_star
+                            self.scanner_config.min_rarity
                         );
                         break;
                     }
 
-                    if tx.send(Some(SendItem { panel_image, equip, star, lock, discard })).is_err() {
+                    if tx.send(Some(SendItem { panel_image, equip, rarity, lock, discard })).is_err() {
                         break;
                     }
 

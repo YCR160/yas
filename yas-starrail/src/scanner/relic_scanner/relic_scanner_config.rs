@@ -6,8 +6,8 @@ use crate::{export::export_format::StarRailRelicExportFormat, scanner_controller
 
 #[derive(Default, Clone)]
 pub struct StarRailRelicScannerConfig {
-    /// Items with stars less than this will be ignored
-    pub min_star: i32,
+    /// Items with rarity less than this will be ignored
+    pub min_rarity: i32,
 
     /// Items with level less than this will be ignored
     pub min_level: i32,
@@ -42,10 +42,10 @@ impl ArgumentsModifier for StarRailRelicScannerConfig {
                     .action(ArgAction::SetTrue)
             )
             .arg(
-                Arg::new("min-star")
-                    .long("min-star")
+                Arg::new("min-rarity")
+                    .long("min-rarity")
                     .help("最小星级")
-                    .value_name("MIN_STAR")
+                    .value_name("MIN_RARITY")
                     .default_value("4")
                     .value_parser(clap::value_parser!(i32))
             )
@@ -74,7 +74,7 @@ impl FromArgMatches for StarRailRelicScannerConfig {
 
         // todo
         let result = StarRailRelicScannerConfig {
-            min_star: *matches.get_one::<i32>("min-star").unwrap(),
+            min_rarity: *matches.get_one::<i32>("min-rarity").unwrap(),
             min_level: *matches.get_one::<i32>("min-level").unwrap(),
             number: if matches.contains_id("number") {
                 *matches.get_one::<i32>("number").unwrap()

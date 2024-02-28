@@ -84,7 +84,7 @@ pub struct RelicStat {
 pub struct StarRailRelic {
     pub set_name: RelicSetName,
     pub slot: RelicSlot,
-    pub star: i32,
+    pub rarity: i32,
     pub level: i32,
     pub main_stat: RelicStat,
     pub sub_stat_1: Option<RelicStat>,
@@ -206,7 +206,7 @@ impl TryFrom<&StarRailRelicScanResult> for StarRailRelic {
         Ok(StarRailRelic {
             set_name,
             slot,
-            star: value.star,
+            rarity: value.rarity,
             level: value.level,
             main_stat,
             sub_stat_1: sub1,
