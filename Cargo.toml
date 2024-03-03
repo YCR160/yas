@@ -6,6 +6,12 @@ members = [
     "yas-starrail"
 ]
 
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package.yas_scanner]
+opt-level = 3
+
 [profile.release]
 lto = true
 panic = "abort"
