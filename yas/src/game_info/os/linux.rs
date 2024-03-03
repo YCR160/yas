@@ -1,6 +1,8 @@
-use crate::game_info::game_info::GameInfo;
+use crate::common::positioning::Rect;
+use crate::game_info::{GameInfo, Resolution, UI};
+use anyhow::Result;
 
-pub fn get_game_info() -> GameInfo {
+pub fn get_game_info(_window_names: &[&str]) -> Result<GameInfo> {
     let window_id = unsafe {
         String::from_utf8_unchecked(
             std::process::Command::new("sh")
@@ -26,17 +28,17 @@ pub fn get_game_info() -> GameInfo {
 
     let mut info = position_size.split("\n");
 
-    let left = info.next().unwrap().parse().unwrap();
-    let top = info.next().unwrap().parse().unwrap();
-    let width = info.next().unwrap().parse().unwrap();
-    let height = info.next().unwrap().parse().unwrap();
+    let left: f64 = info.next().unwrap().parse().unwrap();
+    let top: f64 = info.next().unwrap().parse().unwrap();
+    let width: f64 = info.next().unwrap().parse().unwrap();
+    let height: f64 = info.next().unwrap().parse().unwrap();
 
     let rect = Rect::new(left, top, width, height);
 
-    GameInfo {
+    Ok(GameInfo {
         window: rect,
-        resolution: Resolution::new(rect.size),
+        resolution: Resolution::new(rect.size()),
         is_cloud: false,
         ui: UI::Desktop,
-    }
+    })
 }

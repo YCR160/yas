@@ -1,4 +1,4 @@
-use enigo::Enigo;
+use enigo::{Enigo, MouseControllable, MouseButton};
 
 pub struct LinuxControl {
     enigo: Enigo,
@@ -23,7 +23,7 @@ impl LinuxControl {
         anyhow::Ok(())
     }
 
-    pub fn mouse_scroll(&mut self, amount: i32, _try_find: bool) -> anyhow::Result<()> {
+    pub fn mouse_scroll(&mut self, amount: i32) -> anyhow::Result<()> {
         self.enigo.mouse_scroll_y(amount);
 
         anyhow::Ok(())
