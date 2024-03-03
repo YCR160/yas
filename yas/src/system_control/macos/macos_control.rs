@@ -1,6 +1,5 @@
-use enigo::{Enigo, MouseControllable};
+use enigo::{Enigo, MouseControllable, MouseButton};
 
-use crate::system_control::system_control::SystemControl;
 use crate::utils;
 
 pub struct MacOSControl {
@@ -55,11 +54,11 @@ impl MacOSControl {
         }
     }
     
-    pub fn mac_scroll_fast(length: i32) {
-        mac_scroll(length, 4, 30);
+    pub fn mac_scroll_fast(&mut self, length: i32) {
+        self.mac_scroll(length, 4, 30);
     }
     
-    pub fn mac_scroll_slow(length: i32) {
-        mac_scroll(length, 4, 5);
+    pub fn mac_scroll_slow(&mut self, length: i32) {
+        self.mac_scroll(length, 4, 5);
     }
 }

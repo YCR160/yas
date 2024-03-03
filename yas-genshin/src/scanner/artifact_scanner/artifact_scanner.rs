@@ -1,7 +1,7 @@
 use image::{RgbImage, GenericImageView};
 use log::{error, info, warn};
 use yas::{capture::capture::{self, RelativeCapturable}, common::{color::Color, positioning::{Rect, Pos}}, window_info::{require_window_info::RequireWindowInfo, window_info::WindowInfo}, inference::{model::OCRModel, pre_process::{pre_process, to_gray, ImageConvExt}}, game_info::GameInfo};
-use std::{ops::{Coroutine, CoroutineState}, pin::Pin, rc::Rc, cell::RefCell, sync::{mpsc::{Receiver, Sender, self}, Arc}, thread::JoinHandle, os::windows::thread, collections::HashSet, time::SystemTime};
+use std::{ops::{Coroutine, CoroutineState}, pin::Pin, rc::Rc, cell::RefCell, sync::{mpsc::{Receiver, Sender, self}, Arc}, thread::JoinHandle, collections::HashSet, time::SystemTime};
 
 use crate::scanner_controller::repository_layout::{scan_logic::{GenshinRepositoryScanController, ReturnResult}, config::GenshinRepositoryScannerLogicConfig};
 

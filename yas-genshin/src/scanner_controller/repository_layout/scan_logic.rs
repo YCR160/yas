@@ -3,7 +3,7 @@ use std::ops::Coroutine;
 use std::rc::Rc;
 use image::RgbImage;
 use yas::common::color::Color;
-use yas::game_info::GameInfo;
+use yas::game_info::{GameInfo, UI};
 use yas::capture::capture;
 use yas::window_info::require_window_info::RequireWindowInfo;
 use yas::window_info::window_info::WindowInfo;
@@ -295,10 +295,7 @@ impl GenshinRepositoryScanController {
                 return ScrollResult::Interrupt;
             }
 
-            // FIXME: Why -5 for windows?
-            #[cfg(windows)]
-            self.system_control.mouse_scroll(1, false);
-            // self.enigo.mouse_scroll_y(-5);
+            self.mouse_scroll(1, false);
 
             // self.mouse_scroll(1, count < 1);
 
@@ -326,8 +323,7 @@ impl GenshinRepositoryScanController {
             let length = self.estimate_scroll_length(count);
 
             for _ in 0..length {
-                // todo remove unwrap
-                self.system_control.mouse_scroll(1, false).unwrap();
+                self.mouse_scroll(1, false);
             }
 
             // self.mouse_scroll(length, false);
@@ -390,19 +386,19 @@ impl GenshinRepositoryScanController {
     #[inline(always)]
     pub fn mouse_scroll(&mut self, length: i32, try_find: bool) {
         #[cfg(windows)]
-        self.system_control.mouse_scroll(length, try_find).unwrap();
+        self.system_control.mouse_scroll(length).unwrap();
 
         #[cfg(target_os = "linux")]
-        self.system_control.mouse_scroll(length, try_find);
+        self.system_control.mouse_scroll(length);
 
         #[cfg(target_os = "macos")]
         {
             match self.game_info.ui {
-                crate::common::UI::Desktop => {
+                UI::Desktop => {
                     self.system_control.mouse_scroll(length);
                     utils::sleep(20);
                 },
-                crate::common::UI::Mobile => {
+                UI::Mobile => {
                     if try_find {
                         self.system_control.mac_scroll_fast(length);
                     } else {

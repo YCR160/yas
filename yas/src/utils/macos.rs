@@ -1,10 +1,12 @@
-use crate::common::*;
+use crate::common::positioning::Rect;
+use crate::game_info::UI;
+use crate::utils;
 use cocoa::{
     appkit::CGFloat,
     base::NO,
     foundation::{NSAutoreleasePool, NSPoint, NSSize},
 };
-use enigo::*;
+use enigo::{Enigo, MouseButton, MouseControllable};
 
 pub fn mac_scroll(enigo: &mut Enigo, length: i32, delta: i32, times: i32) {
     for _j in 0..length {
@@ -163,9 +165,21 @@ pub unsafe fn find_window_by_pid(pid: i32) -> Result<(Rect, String), String> {
             if cg_rect.size.height > 200. {
                 mrect = if cg_rect.origin.y > 0. {
                     // Window Mode
-                    Rect::from(cg_rect).with_titlebar(get_titlebar_height() as u32)
+                    // Rect::from(cg_rect).with_titlebar(get_titlebar_height() as u32)
+                    Rect::new(
+                        cg_rect.origin.x,
+                        cg_rect.origin.y + get_titlebar_height(),
+                        cg_rect.size.width,
+                        cg_rect.size.height,
+                    )
                 } else {
-                    Rect::from(cg_rect)
+                    // Rect::from(cg_rect)
+                    Rect::new(
+                        cg_rect.origin.x,
+                        cg_rect.origin.y,
+                        cg_rect.size.width,
+                        cg_rect.size.height,
+                    )
                 };
                 window_count += 1
             }
