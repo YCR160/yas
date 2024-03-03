@@ -2932,7 +2932,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "yas_scanner"
+name = "yas"
 version = "0.1.14"
 dependencies = [
  "anyhow",
@@ -2965,7 +2965,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "yas_scanner_genshin"
+name = "yas_genshin"
 version = "0.1.14"
 dependencies = [
  "anyhow",
@@ -2981,11 +2981,11 @@ dependencies = [
  "strum",
  "strum_macros",
  "winres",
- "yas_scanner",
+ "yas",
 ]
 
 [[package]]
-name = "yas_scanner_starrail"
+name = "yas_starrail"
 version = "0.1.14"
 dependencies = [
  "anyhow",
@@ -3001,7 +3001,7 @@ dependencies = [
  "strum",
  "strum_macros",
  "winres",
- "yas_scanner",
+ "yas",
 ]
 
 [[package]]

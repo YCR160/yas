@@ -9,7 +9,7 @@ members = [
 [profile.dev]
 opt-level = 1
 
-[profile.dev.package.yas_scanner]
+[profile.dev.package.yas]
 opt-level = 3
 
 [profile.release]
