@@ -1,7 +1,7 @@
 #[cfg(windows)]
-mod winodws;
+mod windows;
 #[cfg(windows)]
-pub use winodws::*;
+pub use windows::*;
 
 #[cfg(target_os = "macos")]
 mod macos;
