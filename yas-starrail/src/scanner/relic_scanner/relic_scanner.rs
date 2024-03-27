@@ -470,7 +470,7 @@ impl StarRailRelicScanner {
         let count = self.scanner_config.number;
         let item_name = "遗器";
 
-        let max_count = 1500;
+        let max_count = 2000;
         if count > 0 {
             return Ok(max_count.min(count));
         }
