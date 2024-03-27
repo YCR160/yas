@@ -70,6 +70,8 @@ impl RelicSetName {
             RelicSetName::BrokenKeel => "BrokenKeel",
             RelicSetName::FirmamentFrontlineGlamoth => "FirmamentFrontlineGlamoth",
             RelicSetName::PenaconyLandoftheDreams => "PenaconyLandoftheDreams",
+            RelicSetName::SigoniatheUnclaimedDesolation => "SigoniatheUnclaimedDesolation",
+            RelicSetName::IzumoGenseiandTakamaDivineRealm => "IzumoGenseiandTakamaDivineRealm",
         };
         String::from(temp)
     }
