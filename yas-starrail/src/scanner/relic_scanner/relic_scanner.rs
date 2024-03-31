@@ -300,7 +300,7 @@ pub struct StarRailRelicScanner {
     match_colors_rarity: [Color; 5],
     match_colors_lock: [Color; 3],
     match_colors_discard: [Color; 3],
-    match_colors_equipper: [(&'static str, Color); 43],
+    match_colors_equipper: [(&'static str, Color); 46],
 }
 
 impl RequireWindowInfo for StarRailRelicScanner {
@@ -366,6 +366,7 @@ impl StarRailRelicScanner {
             ],
             // todo use better match color set
             match_colors_equipper: [
+                ("Acheron", Color::new(249, 246, 235)),
                 ("Argenti", Color::new(216, 174, 161)),
                 ("Arlan", Color::new(146, 134, 124)),
                 ("Asta", Color::new(188, 130, 117)),
@@ -378,6 +379,7 @@ impl StarRailRelicScanner {
                 ("DanHengImbibitorLunae", Color::new(181, 169, 163)),
                 ("DrRatio", Color::new(134, 120, 143)),
                 ("FuXuan", Color::new(231, 166, 145)),
+                ("Gallagher", Color::new(117, 77, 60)),
                 ("Gepard", Color::new(192, 199, 223)),
                 ("Guinaifen", Color::new(219, 137, 111)),
                 ("Hanya", Color::new(247, 238, 232)),
@@ -401,6 +403,7 @@ impl StarRailRelicScanner {
                 ("Seele", Color::new(91, 65, 111)),
                 ("Serval", Color::new(158, 141, 150)),
                 ("SilverWolf", Color::new(222, 210, 210)),
+                ("Sparkle", Color::new(227, 164, 196)),
                 ("Sushang", Color::new(101, 65, 58)),
                 ("Tingyun", Color::new(127, 116, 57)),
                 ("TopazNumby", Color::new(254, 250, 246)),
