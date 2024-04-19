@@ -300,7 +300,7 @@ pub struct StarRailRelicScanner {
     match_colors_rarity: [Color; 5],
     match_colors_lock: [Color; 3],
     match_colors_discard: [Color; 3],
-    match_colors_equipper: [(&'static str, Color); 46],
+    match_colors_equipper: [(&'static str, Color); 47],
 }
 
 impl RequireWindowInfo for StarRailRelicScanner {
@@ -370,6 +370,7 @@ impl StarRailRelicScanner {
                 ("Argenti", Color::new(216, 174, 161)),
                 ("Arlan", Color::new(146, 134, 124)),
                 ("Asta", Color::new(188, 130, 117)),
+                ("Aventurine", Color::new(221, 206, 189)),
                 ("Bailu", Color::new(160, 127, 174)),
                 ("BlackSwan", Color::new(252, 242, 239)),
                 ("Blade", Color::new(191, 162, 162)),
