@@ -1,6 +1,10 @@
-mod exporter;
-
+pub use asset_emitter::AssetEmitter;
+pub use export_item::{ExportItem, StatisticItem};
+pub use export_statistics::ExportStatistics;
 pub use exporter::ExportAssets;
-pub use exporter::ExportItem;
-pub use exporter::ExportStatistics;
-pub use exporter::YasExporter;
+
+mod exporter;
+mod export_item;
+mod export_statistics;
+mod asset_emitter;
+

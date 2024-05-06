@@ -1,6 +1,4 @@
-use crate::common::positioning::Rect;
-use crate::game_info::{GameInfo, Resolution, UI};
-use anyhow::Result;
+use crate::game_info::{GameInfo, Platform};
 
 pub fn get_game_info(_window_names: &[&str]) -> Result<GameInfo> {
     let window_id = unsafe {
@@ -35,10 +33,11 @@ pub fn get_game_info(_window_names: &[&str]) -> Result<GameInfo> {
 
     let rect = Rect::new(left, top, width, height);
 
-    Ok(GameInfo {
+    GameInfo {
         window: rect,
-        resolution: Resolution::new(rect.size()),
+        resolution_family: Resolution::new(rect.size),
         is_cloud: false,
         ui: UI::Desktop,
-    })
+        platform: Platform::Linux
+    }
 }

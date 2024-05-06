@@ -1,4 +1,4 @@
-use crate::game_info::game_info::{GameInfo, Resolution, UI};
+use crate::game_info::{GameInfo, ResolutionFamily, UI, Platform};
 use crate::utils;
 use winapi::shared::windef::HWND;
 use anyhow::{Result, anyhow};
@@ -42,12 +42,13 @@ pub fn get_game_info(window_names: &[&str]) -> Result<GameInfo> {
 
     utils::sleep(1000);
 
-    let rect = utils::get_client_rect(hwnd).unwrap();
+    let rect = utils::get_client_rect(hwnd)?;
 
     Ok(GameInfo {
         window: rect,
-        resolution: Resolution::new(rect.size()),
+        resolution_family: ResolutionFamily::new(rect.to_rect_usize().size()).unwrap(),
         is_cloud,
         ui: UI::Desktop,
+        platform: Platform::Windows
     })
 }

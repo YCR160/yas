@@ -1,7 +1,8 @@
+use serde::ser::{Serialize, SerializeMap, Serializer};
+
 use crate::artifact::{
     ArtifactSetName, ArtifactSlot, ArtifactStat, ArtifactStatName, GenshinArtifact,
 };
-use serde::ser::{Serialize, SerializeMap, Serializer};
 
 struct MingyuLabArtifact<'a> {
     artifact: &'a GenshinArtifact,
@@ -130,8 +131,12 @@ impl ArtifactSetName {
             ArtifactSetName::DesertPavilionChronicle => "desert_pavilion_chronicle",
             ArtifactSetName::NymphsDream => "nymphs_dream",
             ArtifactSetName::VourukashasGlow => "vourukashas_glow",
-            ArtifactSetName::MarechausseeHunter => "marechaussee_hunter",
+            ArtifactSetName::MarechausseeHunter => "hunter",
             ArtifactSetName::GoldenTroupe => "golden_troupe",
+            ArtifactSetName::SongOfDaysPast => "song_of_days_past",
+            ArtifactSetName::NighttimeWhispersInTheEchoingWoods => "nighttime_whispers_in_the_echoing_woods",
+            ArtifactSetName::FragmentOfHarmonicWhimsy => "fragment_of_harmonic_whimsy",
+            ArtifactSetName::UnfinishedReverie => "unfinished_reverie",
 
             // Not supported by Mingyulab
             ArtifactSetName::Adventurer => unreachable!(),

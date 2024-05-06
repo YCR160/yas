@@ -3,13 +3,14 @@ resolver = "2"
 members = [
     "yas",
     "yas-genshin",
-    "yas-starrail"
+    "yas-starrail",
+    "yas-derive"
 ]
 
 [profile.dev]
 opt-level = 1
 
-[profile.dev.package.yas]
+[profile.dev.package.yas_scanner]
 opt-level = 3
 
 [profile.release]

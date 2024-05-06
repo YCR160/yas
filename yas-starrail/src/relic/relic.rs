@@ -146,6 +146,21 @@ impl RelicStatName {
             _ => None,
         }
     }
+
+    pub fn is_percentage(&self) -> bool {
+        use RelicStatName::*;
+        match *self {
+            HPPercentage |
+            ATKPercentage |
+            DEFPercentage |
+            CRITRate |
+            CRITDMG |
+            EffectRES |
+            EffectHitRate |
+            BreakEffect => true,
+            _ => false
+        }
+    }
 }
 
 impl RelicStat {

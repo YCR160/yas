@@ -1,5 +1,5 @@
 [package]
-name = "yas_starrail"
+name = "yas_scanner_starrail"
 version = "0.1.14"
 edition = "2021"
 build = "build.rs"
@@ -11,7 +11,8 @@ license = "GPL-2.0-or-later"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-yas = { path = "../yas" }
+yas = { path = "../yas",  package="yas_scanner" }
+yas_derive = { path = "../yas-derive", package = "yas_derive" }
 anyhow = "1.0"
 log = "0.4"
 clap = { version = "4.4", features = ["derive"] }
@@ -19,11 +20,16 @@ image = "0.24"
 serde_json = "1.0"
 edit-distance = "2.1"
 regex = "1.5"
-strum = "0.25"
-strum_macros = "0.25"
+strum = "0.26"
+strum_macros = "0.26"
 lazy_static = "1.4"
 serde = { version = "1.0", features = ["derive"] }
-env_logger = "0.10.0"
+env_logger = "0.11"
+nanoid = "0.4"
 
 [build-dependencies]
 winres = "0.1"
+
+[[bin]]
+name = "yas_relic"
+path = "src/bin/relic_scanner.rs"

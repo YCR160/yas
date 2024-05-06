@@ -1,8 +1,9 @@
+use serde::ser::{SerializeMap, Serializer};
+use serde::Serialize;
+
 use crate::artifact::{
     ArtifactSetName, ArtifactSlot, ArtifactStat, ArtifactStatName, GenshinArtifact,
 };
-use serde::ser::{SerializeMap, Serializer};
-use serde::Serialize;
 
 struct GOODArtifact<'a> {
     artifact: &'a GenshinArtifact,
@@ -155,6 +156,10 @@ impl ArtifactSetName {
             ArtifactSetName::VourukashasGlow => "VourukashasGlow",
             ArtifactSetName::MarechausseeHunter => "MarechausseeHunter",
             ArtifactSetName::GoldenTroupe => "GoldenTroupe",
+            ArtifactSetName::SongOfDaysPast => "SongOfDaysPast",
+            ArtifactSetName::NighttimeWhispersInTheEchoingWoods => "NighttimeWhispersInTheEchoingWoods",
+            ArtifactSetName::FragmentOfHarmonicWhimsy => "FragmentOfHarmonicWhimsy",
+            ArtifactSetName::UnfinishedReverie => "UnfinishedReverie",
         }
     }
 }
