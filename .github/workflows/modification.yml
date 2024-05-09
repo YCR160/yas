@@ -55,20 +55,20 @@ jobs:
 
       - name: Rename Outputs
         run: |
-          Move-Item ./target/release/yas_genshin.exe "yas_genshin_$env:GIT_REV.exe"
-          Move-Item ./target/release/yas_starrail.exe "yas_starrail_$env:GIT_REV.exe"
+          Move-Item ./target/release/yas_artifact.exe "yas_artifact_$env:GIT_REV.exe"
+          Move-Item ./target/release/yas_relic.exe "yas_relic_$env:GIT_REV.exe"
 
-      - name: Upload yas_genshin
+      - name: Upload yas_artifact
         uses: actions/upload-artifact@v4
         with:
-          name: yas_genshin_${{ env.GIT_REV }}
-          path: yas_genshin_${{ env.GIT_REV }}.exe
+          name: yas_artifact_${{ env.GIT_REV }}
+          path: yas_artifact_${{ env.GIT_REV }}.exe
 
-      - name: Upload yas_starrail
+      - name: Upload yas_relic
         uses: actions/upload-artifact@v4
         with:
-          name: yas_starrail_${{ env.GIT_REV }}
-          path: yas_starrail_${{ env.GIT_REV }}.exe
+          name: yas_relic_${{ env.GIT_REV }}
+          path: yas_relic_${{ env.GIT_REV }}.exe
 
   mac:
     runs-on: macos-latest
