@@ -3,7 +3,7 @@ use crate::utils;
 use crate::positioning::{Rect, Size};
 use anyhow::Result;
 
-pub fn get_game_info(_window_names: &[&str]) -> Result<GameInfo> {
+pub fn get_game_info() -> Result<GameInfo> {
     let (pid, ui) = utils::get_pid_and_ui();
 
     let (rect, _window_title) = unsafe { utils::find_window_by_pid(pid).unwrap() };

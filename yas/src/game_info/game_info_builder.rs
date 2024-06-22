@@ -25,14 +25,27 @@ impl GameInfoBuilder {
     }
 
     pub fn build(&self) -> Result<GameInfo> {
-        let mut window_names = Vec::new();
-        for name in self.local_window_names.iter() {
-            window_names.push(name.as_str());
+        #[cfg(windows)]
+        {
+            let mut window_names = Vec::new();
+            for name in self.local_window_names.iter() {
+                window_names.push(name.as_str());
+            }
+            for name in self.cloud_window_names.iter() {
+                window_names.push(name.as_str());
+            }
+            crate::game_info::os::get_game_info(&window_names)
+            // crate::game_info::os::get_game_info(&["原神", "Genshin Impact", "云·原神"])
         }
-        for name in self.cloud_window_names.iter() {
-            window_names.push(name.as_str());
+
+        #[cfg(target_os = "linux")]
+        {
+            crate::game_info::os::get_game_info()
         }
-        crate::game_info::os::get_game_info(&window_names)
-        // crate::game_info::os::get_game_info(&["原神", "Genshin Impact", "云·原神"])
+
+        #[cfg(target_os = "macos")]
+        {
+            crate::game_info::os::get_game_info()
+        }
     }
 }

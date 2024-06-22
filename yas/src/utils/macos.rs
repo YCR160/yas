@@ -167,18 +167,18 @@ pub unsafe fn find_window_by_pid(pid: i32) -> Result<(Rect<i32>, String), String
                     // Window Mode
                     // Rect::from(cg_rect).with_titlebar(get_titlebar_height() as u32)
                     Rect::new(
-                        cg_rect.origin.x as i32,
-                        (cg_rect.origin.y + get_titlebar_height()) as i32,
-                        cg_rect.size.width as i32,
-                        cg_rect.size.height as i32,
+                        cg_rect.origin.x,
+                        cg_rect.origin.y + get_titlebar_height(),
+                        cg_rect.size.width,
+                        cg_rect.size.height,
                     )
                 } else {
                     // Rect::from(cg_rect)
                     Rect::new(
-                        cg_rect.origin.x as i32,
-                        cg_rect.origin.y as i32,
-                        cg_rect.size.width as i32,
-                        cg_rect.size.height as i32,
+                        cg_rect.origin.x,
+                        cg_rect.origin.y,
+                        cg_rect.size.width,
+                        cg_rect.size.height,
                     )
                 };
                 window_count += 1
@@ -186,7 +186,7 @@ pub unsafe fn find_window_by_pid(pid: i32) -> Result<(Rect<i32>, String), String
         }
     }
     if window_count > 0 {
-        Ok((mrect, title))
+        Ok((mrect.to_rect_i32(), title))
     } else {
         Err("No genshin window found".to_string())
     }
