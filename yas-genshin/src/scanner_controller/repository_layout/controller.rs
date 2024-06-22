@@ -9,7 +9,7 @@ use image::RgbImage;
 use log::{error, info};
 
 use yas::capture::{Capturer, GenericCapturer};
-use yas::game_info::GameInfo;
+use yas::game_info::{GameInfo, UI};
 use yas::positioning::Pos;
 use yas::system_control::SystemControl;
 use yas::utils;

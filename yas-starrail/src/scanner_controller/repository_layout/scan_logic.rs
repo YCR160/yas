@@ -2,7 +2,7 @@ use std::cell::RefCell;
 use std::ops::Coroutine;
 use std::rc::Rc;
 use image::{Rgb, RgbImage};
-use yas::game_info::GameInfo;
+use yas::game_info::{GameInfo, UI};
 use crate::scanner_controller::repository_layout::config::StarRailRepositoryScannerLogicConfig;
 use yas::utils;
 use log::{info, error};

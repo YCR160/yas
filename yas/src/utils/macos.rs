@@ -1,4 +1,4 @@
-use crate::common::positioning::Rect;
+use crate::positioning::Rect;
 use crate::game_info::UI;
 use crate::utils;
 use cocoa::{
@@ -102,7 +102,7 @@ pub fn request_capture_access() -> bool {
     access.preflight() || access.request()
 }
 
-pub unsafe fn find_window_by_pid(pid: i32) -> Result<(Rect, String), String> {
+pub unsafe fn find_window_by_pid(pid: i32) -> Result<(Rect<i32>, String), String> {
     use core_foundation::array::{CFArrayGetCount, CFArrayGetValueAtIndex};
     use core_foundation::base::TCFType;
     use core_foundation::dictionary::{
@@ -112,14 +112,14 @@ pub unsafe fn find_window_by_pid(pid: i32) -> Result<(Rect, String), String> {
     use core_foundation::string::{CFString, CFStringRef};
     use core_graphics::geometry::CGRect;
     use core_graphics::window::{
-        kCGNullWindowID, kCGWindowBounds, kCGWindowListOptionExcludeDesktopElements,
+        kCGNullWindowID, kCGWindowBounds, kCGWindowListExcludeDesktopElements,
         kCGWindowOwnerName, kCGWindowOwnerPID, CGWindowListCopyWindowInfo,
     };
 
     use std::ffi::c_void;
 
     let cf_win_array =
-        CGWindowListCopyWindowInfo(kCGWindowListOptionExcludeDesktopElements, kCGNullWindowID);
+        CGWindowListCopyWindowInfo(kCGWindowListExcludeDesktopElements, kCGNullWindowID);
     let count = CFArrayGetCount(cf_win_array);
 
     if count == 0 {
@@ -167,18 +167,18 @@ pub unsafe fn find_window_by_pid(pid: i32) -> Result<(Rect, String), String> {
                     // Window Mode
                     // Rect::from(cg_rect).with_titlebar(get_titlebar_height() as u32)
                     Rect::new(
-                        cg_rect.origin.x,
-                        cg_rect.origin.y + get_titlebar_height(),
-                        cg_rect.size.width,
-                        cg_rect.size.height,
+                        cg_rect.origin.x as i32,
+                        (cg_rect.origin.y + get_titlebar_height()) as i32,
+                        cg_rect.size.width as i32,
+                        cg_rect.size.height as i32,
                     )
                 } else {
                     // Rect::from(cg_rect)
                     Rect::new(
-                        cg_rect.origin.x,
-                        cg_rect.origin.y,
-                        cg_rect.size.width,
-                        cg_rect.size.height,
+                        cg_rect.origin.x as i32,
+                        cg_rect.origin.y as i32,
+                        cg_rect.size.width as i32,
+                        cg_rect.size.height as i32,
                     )
                 };
                 window_count += 1
