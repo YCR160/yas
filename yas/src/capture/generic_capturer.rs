@@ -1,4 +1,6 @@
-use crate::capture::{Capturer, ScreenshotsCapturer, WinapiCapturer};
+#[cfg(target_os = "windows")]
+use crate::capture::WinapiCapturer;
+use crate::capture::{Capturer, ScreenshotsCapturer};
 use anyhow::Result;
 use image::RgbImage;
 use crate::positioning::Rect;

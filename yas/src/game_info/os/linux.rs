@@ -1,4 +1,6 @@
-use crate::game_info::{GameInfo, Platform};
+use crate::game_info::{GameInfo, Platform, ResolutionFamily, UI};
+use crate::positioning::{Rect, Size};
+use anyhow::Result;
 
 pub fn get_game_info(_window_names: &[&str]) -> Result<GameInfo> {
     let window_id = unsafe {
@@ -26,18 +28,18 @@ pub fn get_game_info(_window_names: &[&str]) -> Result<GameInfo> {
 
     let mut info = position_size.split("\n");
 
-    let left: f64 = info.next().unwrap().parse().unwrap();
-    let top: f64 = info.next().unwrap().parse().unwrap();
-    let width: f64 = info.next().unwrap().parse().unwrap();
-    let height: f64 = info.next().unwrap().parse().unwrap();
+    let left: i32 = info.next().unwrap().parse().unwrap();
+    let top: i32 = info.next().unwrap().parse().unwrap();
+    let width: i32 = info.next().unwrap().parse().unwrap();
+    let height: i32 = info.next().unwrap().parse().unwrap();
 
     let rect = Rect::new(left, top, width, height);
 
-    GameInfo {
+    Ok(GameInfo {
         window: rect,
-        resolution_family: Resolution::new(rect.size),
+        resolution_family: ResolutionFamily::new(rect.to_rect_usize().size()).unwrap(),
         is_cloud: false,
         ui: UI::Desktop,
-        platform: Platform::Linux
-    }
+        platform: Platform::Linux,
+    })
 }
