@@ -4,7 +4,7 @@ pub struct MatchColors {
     pub match_colors_rarity: [Rgb<u8>; 5],
     pub match_colors_lock: [Rgb<u8>; 3],
     pub match_colors_discard: [Rgb<u8>; 3],
-    pub match_colors_equipper: [(&'static str, Rgb<u8>); 50],
+    pub match_colors_equipper: [(&'static str, Rgb<u8>); 49],
 }
 
 pub const MATCH_COLORS: MatchColors = MatchColors {
@@ -71,7 +71,6 @@ pub const MATCH_COLORS: MatchColors = MatchColors {
         ("Sushang", Rgb([101, 65, 58])),
         ("Tingyun", Rgb([127, 116, 57])),
         ("TopazNumby", Rgb([254, 250, 246])),
-        ("Trailblazer_Preservation", Rgb([153, 125, 111])),
         ("Welt", Rgb([158, 114, 99])),
         ("Xueyi", Rgb([250, 242, 230])),
         ("Yanqing", Rgb([255, 242, 232])),
