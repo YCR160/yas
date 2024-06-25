@@ -105,12 +105,12 @@ impl StarRailRelicScanner {
         )
     }
 
-    pub fn get_rarity(&self) -> Result<usize> {
+    pub fn get_rarity(&self, panel_image: &RgbImage) -> Result<usize> {
         let pos: Pos<i32> = Pos {
-            x: self.game_info.window.left + self.window_info.rarity_pos.x as i32,
-            y: self.game_info.window.top + self.window_info.rarity_pos.y as i32,
+            x: (self.window_info.rarity_pos.x - self.window_info.panel_rect.left) as i32,
+            y: (self.window_info.rarity_pos.y - self.window_info.panel_rect.top) as i32,
         };
-        let color = self.capturer.capture_color(pos)?;
+        let color = panel_image.get_pixel(pos.x as u32, pos.y as u32);
 
         let (index, _) = self.match_colors.match_colors_rarity
             .iter()
@@ -121,12 +121,12 @@ impl StarRailRelicScanner {
         Ok(index + 1)
     }
 
-    pub fn get_lock(&self) -> Result<bool> {
+    pub fn get_lock(&self, panel_image: &RgbImage) -> Result<bool> {
         let pos: Pos<i32> = Pos {
-            x: self.game_info.window.left + self.window_info.lock_pos.x as i32,
-            y: self.game_info.window.top + self.window_info.lock_pos.y as i32,
+            x: (self.window_info.lock_pos.x - self.window_info.panel_rect.left) as i32,
+            y: (self.window_info.lock_pos.y - self.window_info.panel_rect.top) as i32,
         };
-        let color = self.capturer.capture_color(pos)?;
+        let color = panel_image.get_pixel(pos.x as u32, pos.y as u32);
 
         let (index, _) = self.match_colors.match_colors_lock
             .iter()
@@ -137,12 +137,12 @@ impl StarRailRelicScanner {
         Ok(index == 0)
     }
 
-    pub fn get_discard(&self) -> Result<bool> {
+    pub fn get_discard(&self, panel_image: &RgbImage) -> Result<bool> {
         let pos: Pos<i32> = Pos {
-            x: self.game_info.window.left + self.window_info.discard_pos.x as i32,
-            y: self.game_info.window.top + self.window_info.discard_pos.y as i32,
+            x: (self.window_info.discard_pos.x - self.window_info.panel_rect.left) as i32,
+            y: (self.window_info.discard_pos.y - self.window_info.panel_rect.top) as i32,
         };
-        let color = self.capturer.capture_color(pos)?;
+        let color = panel_image.get_pixel(pos.x as u32, pos.y as u32);
 
         let (index, _) = self.match_colors.match_colors_discard
             .iter()
@@ -153,12 +153,12 @@ impl StarRailRelicScanner {
         Ok(index == 0)
     }
 
-    pub fn get_equipper(&self) -> Result<String> {
+    pub fn get_equipper(&self, panel_image: &RgbImage) -> Result<String> {
         let pos: Pos<i32> = Pos {
-            x: self.game_info.window.left + self.window_info.equipper_pos.x as i32,
-            y: self.game_info.window.top + self.window_info.equipper_pos.y as i32,
+            x: (self.window_info.equipper_pos.x - self.window_info.panel_rect.left) as i32,
+            y: (self.window_info.equipper_pos.y - self.window_info.panel_rect.top) as i32,
         };
-        let color = self.capturer.capture_color(pos)?;
+        let color = panel_image.get_pixel(pos.x as u32, pos.y as u32);
 
         let (name, _) = self.match_colors.match_colors_equipper
             .iter()
@@ -240,10 +240,10 @@ impl StarRailRelicScanner {
                 CoroutineState::Yielded(_) => {
                     // let image = self.capture_panel().unwrap();
                     let panel_image = self.capture_panel().unwrap();
-                    let equip = self.get_equipper().unwrap();
-                    let rarity = self.get_rarity().unwrap();
-                    let lock = self.get_lock().unwrap();
-                    let discard = self.get_discard().unwrap();
+                    let equip = self.get_equipper(&panel_image).unwrap();
+                    let rarity = self.get_rarity(&panel_image).unwrap();
+                    let lock = self.get_lock(&panel_image).unwrap();
+                    let discard = self.get_discard(&panel_image).unwrap();
 
                     // todo normalize types
                     if (rarity as i32) < self.scanner_config.min_rarity {
