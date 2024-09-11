@@ -4,7 +4,7 @@ pub struct MatchColors {
     pub match_colors_rarity: [Rgb<u8>; 5],
     pub match_colors_lock: [Rgb<u8>; 3],
     pub match_colors_discard: [Rgb<u8>; 3],
-    pub match_colors_equipper: [(&'static str, Rgb<u8>); 49],
+    pub match_colors_equipper: [(&'static str, Rgb<u8>); 50],
 }
 
 pub const MATCH_COLORS: MatchColors = MatchColors {
@@ -40,6 +40,7 @@ pub const MATCH_COLORS: MatchColors = MatchColors {
         ("DanHeng", Rgb([124, 100, 100])),
         ("DanHengImbibitorLunae", Rgb([181, 169, 163])),
         ("DrRatio", Rgb([134, 120, 143])),
+        ("Feixiao", Rgb([69, 47, 47])),
         ("Firefly", Rgb([100, 100, 120])),
         ("FuXuan", Rgb([231, 166, 145])),
         ("Gallagher", Rgb([117, 77, 60])),
@@ -56,8 +57,8 @@ pub const MATCH_COLORS: MatchColors = MatchColors {
         ("Luka", Rgb([218, 198, 183])),
         ("Luocha", Rgb([191, 160, 116])),
         ("Lynx", Rgb([247, 213, 197])),
-        ("March7th", Rgb([251, 243, 243])),
         ("Misha", Rgb([234, 215, 213])),
+        ("Moze", Rgb([243, 239, 234])),
         ("Natasha", Rgb([238, 208, 196])),
         ("Pela", Rgb([241, 217, 217])),
         ("Qingque", Rgb([18, 27, 11])),
