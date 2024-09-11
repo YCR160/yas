@@ -6,6 +6,10 @@ on:
       - modification
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  attestations: write
+
 env:
   CARGO_TERM_COLOR: always
 
@@ -69,6 +73,10 @@ jobs:
         with:
           name: yas_relic_${{ env.GIT_REV }}
           path: yas_relic_${{ env.GIT_REV }}.exe
+
+      - uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: 'yas_*.exe'
 
   mac:
     runs-on: macos-latest
