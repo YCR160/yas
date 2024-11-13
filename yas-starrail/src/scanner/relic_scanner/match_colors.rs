@@ -4,7 +4,7 @@ pub struct MatchColors {
     pub match_colors_rarity: [Rgb<u8>; 5],
     pub match_colors_lock: [Rgb<u8>; 3],
     pub match_colors_discard: [Rgb<u8>; 3],
-    pub match_colors_equipper: [(&'static str, Rgb<u8>); 50],
+    pub match_colors_equipper: [(&'static str, Rgb<u8>); 51],
 }
 
 pub const MATCH_COLORS: MatchColors = MatchColors {
@@ -54,6 +54,7 @@ pub const MATCH_COLORS: MatchColors = MatchColors {
         ("Jingliu", Rgb([193, 194, 218])),
         ("JingYuan", Rgb([169, 154, 147])),
         ("Kafka", Rgb([126, 50, 80])),
+        ("Lingsha", Rgb([252, 231, 228])),
         ("Luka", Rgb([218, 198, 183])),
         ("Luocha", Rgb([191, 160, 116])),
         ("Lynx", Rgb([247, 213, 197])),

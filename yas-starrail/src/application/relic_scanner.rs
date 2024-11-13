@@ -89,7 +89,7 @@ impl RelicScannerApplication {
         for line in table.lines() {
             info!("{}", line);
         }
-        info!("Yas 识别结束，共识别到 {} 件圣遗物。", results.len());
+        info!("Yas 识别结束，共识别到 {} 件遗器。", results.len());
 
         Ok(())
     }

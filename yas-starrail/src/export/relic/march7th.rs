@@ -59,6 +59,8 @@ impl RelicSetName {
             RelicSetName::WatchmakerMasterofDreamMachinations => "WatchmakerMasterofDreamMachinations",
             RelicSetName::IronCavalryAgainsttheScourge => "IronCavalryAgainsttheScourge",
             RelicSetName::TheWindSoaringValorous => "TheWindSoaringValorous",
+            RelicSetName::SacerdosRelivedOrdeal => "SacerdosRelivedOrdeal",
+            RelicSetName::ScholarLostinErudition => "ScholarLostinErudition",
 
             RelicSetName::SpaceSealingStation => "SpaceSealingStation",
             RelicSetName::FleetoftheAgeless => "FleetoftheAgeless",
