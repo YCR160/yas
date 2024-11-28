@@ -226,7 +226,8 @@ impl StarRailRepositoryScanController {
     pub fn capture_flag(&self) -> Result<[Rgb<u8>; 50]> {
         let mut flag = [Rgb([0, 0, 0]); 50];
         let window_origin = self.game_info.window.to_rect_f64().origin();
-        let rect = self.window_info.flag_rect.translate(window_origin);
+        let mut rect = self.window_info.flag_rect.translate(window_origin);
+        rect.width = 1.0;
         let im = self.capturer.capture_rect(rect.to_rect_i32())?;
 
         // Gap size between repository top and first item row varies with resolution.
