@@ -92,6 +92,8 @@ pub enum ArtifactSetName {
     NighttimeWhispersInTheEchoingWoods,
     FragmentOfHarmonicWhimsy,
     UnfinishedReverie,
+    ScrollOfTheHeroOfCinderCity,
+    ObsidianCodex,
 }
 
 #[derive(Debug, Clone)]
@@ -105,6 +107,7 @@ pub struct GenshinArtifact {
     pub set_name: ArtifactSetName,
     pub slot: ArtifactSlot,
     pub star: i32,
+    pub lock: bool,
     pub level: i32,
     pub main_stat: ArtifactStat,
     pub sub_stat_1: Option<ArtifactStat>,
@@ -202,6 +205,7 @@ impl TryFrom<&GenshinArtifactScanResult> for GenshinArtifact {
         let set_name = ArtifactSetName::from_zh_cn(&value.name).ok_or(())?;
         let slot = ArtifactSlot::from_zh_cn(&value.name).ok_or(())?;
         let star = value.star;
+        let lock = value.lock;
 
         let main_stat = ArtifactStat::from_zh_cn_raw(
             (value.main_stat_name.clone() + "+" + value.main_stat_value.as_str()).as_str(),
@@ -230,6 +234,7 @@ impl TryFrom<&GenshinArtifactScanResult> for GenshinArtifact {
             set_name,
             slot,
             star,
+            lock,
             level: value.level,
             main_stat,
             sub_stat_1: sub1,
@@ -431,6 +436,8 @@ impl ArtifactSetName {
             "慈爱的淑女帽" | "诚恳的蘸水笔" | "无私的妆饰花" | "忠实的砂时计" | "慷慨的墨水瓶" => Some(ArtifactSetName::NighttimeWhispersInTheEchoingWoods),
             "异想零落的圆舞" | "古海玄幽的夜想" | "谐律交响的前奏" | "命途轮转的谐谑" | "灵露倾洒的狂诗" => Some(ArtifactSetName::FragmentOfHarmonicWhimsy),
             "失冕的宝冠" | "褪光的翠尾" | "暗结的明花" | "举业的识刻" | "筹谋的共樽" => Some(ArtifactSetName::UnfinishedReverie),
+            "魔战士的羽面" | "巡山客的信标" | "驯兽师的护符" | "秘术家的金盘" | "游学者的爪杯" => Some(ArtifactSetName::ScrollOfTheHeroOfCinderCity),
+            "诸圣的礼冠" | "灵髓的根脉" | "异种的期许" | "夜域的迷思" | "纷争的前宴" => Some(ArtifactSetName::ObsidianCodex),
             _ => None,
         }
     }
@@ -680,6 +687,16 @@ impl ArtifactSlot {
             "暗结的明花" => Some(ArtifactSlot::Flower),
             "举业的识刻" => Some(ArtifactSlot::Sand),
             "筹谋的共樽" => Some(ArtifactSlot::Goblet),
+            "魔战士的羽面" => Some(ArtifactSlot::Head),
+            "巡山客的信标" => Some(ArtifactSlot::Feather),
+            "驯兽师的护符" => Some(ArtifactSlot::Flower),
+            "秘术家的金盘" => Some(ArtifactSlot::Sand),
+            "游学者的爪杯" => Some(ArtifactSlot::Goblet),
+            "诸圣的礼冠" => Some(ArtifactSlot::Head),
+            "灵髓的根脉" => Some(ArtifactSlot::Feather),
+            "异种的期许" => Some(ArtifactSlot::Flower),
+            "夜域的迷思" => Some(ArtifactSlot::Sand),
+            "纷争的前宴" => Some(ArtifactSlot::Goblet),
             _ => None,
         }
     }

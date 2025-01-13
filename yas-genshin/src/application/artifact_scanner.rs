@@ -1,5 +1,6 @@
-use anyhow::{anyhow, Result};
-use clap::{Args, command};
+use anyhow::Result;
+use anyhow::anyhow;
+use clap::{command, ArgMatches, Args};
 use log::info;
 
 use yas::export::{AssetEmitter, ExportAssets};
@@ -11,14 +12,18 @@ use crate::export::artifact::{ExportArtifactConfig, GenshinArtifactExporter};
 use crate::scanner::{GenshinArtifactScanner, GenshinArtifactScannerConfig};
 use crate::scanner_controller::repository_layout::GenshinRepositoryScannerLogicConfig;
 
-pub struct ArtifactScannerApplication;
+pub struct ArtifactScannerApplication {
+    arg_matches: ArgMatches,
+}
 
 impl ArtifactScannerApplication {
-    pub fn new() -> Self {
-        ArtifactScannerApplication
+    pub fn new(matches: ArgMatches) -> Self {
+        ArtifactScannerApplication {
+            arg_matches: matches
+        }
     }
 
-    fn build_command() -> clap::Command {
+    pub fn build_command() -> clap::Command {
         let mut cmd = command!();
         cmd = <ExportArtifactConfig as Args>::augment_args_for_update(cmd);
         cmd = <GenshinArtifactScannerConfig as Args>::augment_args_for_update(cmd);
@@ -36,11 +41,11 @@ impl ArtifactScannerApplication {
         )
     }
 
-    fn init() {
-        env_logger::Builder::new()
-            .filter_level(log::LevelFilter::Info)
-            .init();
-    }
+    // fn init() {
+    //     env_logger::Builder::new()
+    //         .filter_level(log::LevelFilter::Info)
+    //         .init();
+    // }
 
     fn get_game_info() -> Result<GameInfo> {
         let game_info = GameInfoBuilder::new()
@@ -54,8 +59,7 @@ impl ArtifactScannerApplication {
 
 impl ArtifactScannerApplication {
     pub fn run(&self) -> Result<()> {
-        Self::init();
-        let arg_matches = Self::build_command().get_matches();
+        let arg_matches = &self.arg_matches;
         let window_info_repository = Self::get_window_info_repository();
         let game_info = Self::get_game_info()?;
 
@@ -74,19 +78,17 @@ impl ArtifactScannerApplication {
 
         let mut scanner = GenshinArtifactScanner::from_arg_matches(
             &window_info_repository,
-            &arg_matches,
+            arg_matches,
             game_info.clone()
         )?;
 
         let result = scanner.scan()?;
         let artifacts = result
             .iter()
-            .map(|x| GenshinArtifact::try_from(x))
-            .filter(|x| x.is_ok())
-            .map(|x| x.unwrap())
+            .flat_map(GenshinArtifact::try_from)
             .collect::<Vec<_>>();
 
-        let exporter = GenshinArtifactExporter::new(&arg_matches, &artifacts)?;
+        let exporter = GenshinArtifactExporter::new(arg_matches, &artifacts)?;
         let mut export_assets = ExportAssets::new();
         exporter.emit(&mut export_assets);
 

@@ -1,14 +1,30 @@
+pub use stream_capturer::StreamingCapturer;
+pub use capturer::Capturer;
+pub use generic_capturer::GenericCapturer;
+
 mod capturer;
+mod generic_capturer;
+mod stream_capturer;
+
+// windows
+
+#[cfg(target_os = "windows")]
 mod screenshots_capturer;
-mod xcap_capturer;
 #[cfg(target_os = "windows")]
 mod winapi_capturer;
-mod generic_capturer;
-// #[cfg(target_os = "windows")]
-// mod window_capture_capturer;
+#[cfg(target_os = "windows")]
+mod windows_capturer;
 
-pub use capturer::Capturer;
+#[cfg(target_os = "windows")]
 pub use screenshots_capturer::ScreenshotsCapturer;
 #[cfg(target_os = "windows")]
 pub use winapi_capturer::WinapiCapturer;
-pub use generic_capturer::GenericCapturer;
+#[cfg(target_os = "windows")]
+pub use windows_capturer::WindowsCapturer;
+
+// linux
+#[cfg(target_os = "linux")]
+mod libwayshot_capturer;
+
+#[cfg(target_os = "linux")]
+pub use libwayshot_capturer::LibwayshotCapturer;

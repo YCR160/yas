@@ -1,4 +1,4 @@
-use std::{cell::RefCell, ops::{Coroutine, CoroutineState}, pin::Pin, rc::Rc, sync::{mpsc::{self, Sender}}, time::SystemTime};
+use std::{cell::RefCell, ops::{Coroutine, CoroutineState}, pin::Pin, rc::Rc, sync::mpsc::{self, Sender}, time::SystemTime};
 
 use anyhow::Result;
 use clap::FromArgMatches;
@@ -12,13 +12,13 @@ use yas::positioning::Pos;
 use yas::window_info::FromWindowInfoRepository;
 use yas::window_info::WindowInfoRepository;
 
-use crate::scanner::artifact_scanner::artifact_scanner_worker::ArtifactScannerWorker;
+use crate::{scanner::artifact_scanner::artifact_scanner_worker::ArtifactScannerWorker};
 use crate::scanner::artifact_scanner::message_items::SendItem;
 use crate::scanner::artifact_scanner::scan_result::GenshinArtifactScanResult;
 use crate::scanner_controller::repository_layout::{
     GenshinRepositoryScanController,
     GenshinRepositoryScannerLogicConfig,
-    ReturnResult as GenshinRepositoryControllerReturnResult
+    ReturnResult as GenshinRepositoryControllerReturnResult,
 };
 
 use super::artifact_scanner_config::GenshinArtifactScannerConfig;
@@ -28,7 +28,7 @@ fn color_distance(c1: &image::Rgb<u8>, c2: &image::Rgb<u8>) -> usize {
     let x = c1.0[0] as i32 - c2.0[0] as i32;
     let y = c1.0[1] as i32 - c2.0[1] as i32;
     let z = c1.0[2] as i32 - c2.0[2] as i32;
-    return (x * x + y * y + z * z) as usize;
+    (x * x + y * y + z * z) as usize
 }
 
 pub struct GenshinArtifactScanner {
@@ -65,10 +65,10 @@ impl GenshinArtifactScanner {
                 game_info.window.to_rect_usize().size(),
                 game_info.ui,
                 game_info.platform,
-                window_info_repo
+                window_info_repo,
             )?,
             controller: Rc::new(RefCell::new(
-                GenshinRepositoryScanController::new(window_info_repo, controller_config, game_info.clone())?
+                GenshinRepositoryScanController::new(window_info_repo, controller_config, game_info.clone(), true)?
             )),
             game_info,
             image_to_text: Self::get_image_to_text()?,
@@ -86,17 +86,17 @@ impl GenshinArtifactScanner {
             game_info.window.to_rect_usize().size(),
             game_info.ui,
             game_info.platform,
-            window_info_repo
+            window_info_repo,
         )?;
         Ok(GenshinArtifactScanner {
             scanner_config: GenshinArtifactScannerConfig::from_arg_matches(arg_matches)?,
             window_info,
             controller: Rc::new(RefCell::new(
-                GenshinRepositoryScanController::from_arg_matches(window_info_repo, arg_matches, game_info.clone())?
+                GenshinRepositoryScanController::from_arg_matches(window_info_repo, arg_matches, game_info.clone(), true)?
             )),
             game_info,
             image_to_text: Self::get_image_to_text()?,
-            capturer: Self::get_capturer()?
+            capturer: Self::get_capturer()?,
         })
     }
 }
@@ -105,7 +105,7 @@ impl GenshinArtifactScanner {
     pub fn capture_panel(&self) -> Result<RgbImage> {
         self.capturer.capture_relative_to(
             self.window_info.panel_rect.to_rect_i32(),
-            self.game_info.window.origin()
+            self.game_info.window.origin(),
         )
     }
 
@@ -127,7 +127,7 @@ impl GenshinArtifactScanner {
         let mut min_dis: usize = 0xdeadbeef;
         let mut ret: usize = 1;
         for (i, match_color) in match_colors.iter().enumerate() {
-            let dis2 = color_distance(&match_color, &color);
+            let dis2 = color_distance(match_color, &color);
             if dis2 < min_dis {
                 min_dis = dis2;
                 ret = i + 1;
@@ -148,7 +148,7 @@ impl GenshinArtifactScanner {
 
         let im = self.capturer.capture_relative_to(
             self.window_info.item_count_rect.to_rect_i32(),
-            self.game_info.window.origin()
+            self.game_info.window.origin(),
         )?;
         // im.save("item_count.png")?;
         let s = self.image_to_text.image_to_text(&im, false)?;
@@ -192,14 +192,48 @@ impl GenshinArtifactScanner {
         match join_handle.join() {
             Ok(v) => {
                 info!("识别耗时: {:?}", now.elapsed()?);
+
+                // filter min level
+                let min_level = self.scanner_config.min_level;
+                let v = v.iter().filter(|a| {
+                    a.level >= min_level
+                }).cloned().collect();
+
                 Ok(v)
             }
             Err(_) => Err(anyhow::anyhow!("识别线程出现错误")),
         }
     }
 
+    fn is_page_first_artifact(&self, cur_index: i32) -> bool {
+        let col = self.window_info.col;
+        let row = self.window_info.row;
+
+        let page_size = col * row;
+        return cur_index % page_size == 0;
+    }
+
+    /// Get the starting row in the page where `cur_index` is in
+    /// max count: total count
+    /// cur_index: current item index (starting from 0)
+    fn get_start_row(&self, max_count: i32, cur_index: i32) -> i32 {
+        let col = self.window_info.col;
+        let row = self.window_info.row;
+
+        let page_size = col * row;
+        if max_count - cur_index >= page_size {
+            return 0;
+        } else {
+            let remain = max_count - cur_index;
+            let remain_row = (remain + col - 1) / col;
+            let scroll_row = remain_row.min(row);
+            return row - scroll_row;
+        }
+    }
+
     fn send(&mut self, tx: &Sender<Option<SendItem>>, count: i32) {
         let mut generator = GenshinRepositoryScanController::get_generator(self.controller.clone(), count as usize);
+        let mut artifact_index: i32 = 0;
 
         loop {
             let pinned_generator = Pin::new(&mut generator);
@@ -207,6 +241,42 @@ impl GenshinArtifactScanner {
                 CoroutineState::Yielded(_) => {
                     let image = self.capture_panel().unwrap();
                     let star = self.get_star().unwrap();
+
+                    let list_image = if self.is_page_first_artifact(artifact_index) {
+                        let origin = self.game_info.window;
+                        let margin = self.window_info.scan_margin_pos;
+                        let gap = self.window_info.item_gap_size;
+                        let size = self.window_info.item_size;
+
+                        let left = (origin.left as f64 + margin.x) as i32;
+                        let top = (origin.top as f64
+                            + margin.y
+                            + (gap.height + size.height)
+                            * self.get_start_row(count, artifact_index) as f64)
+                            as i32;
+                        let width = (origin.width as f64 - margin.x) as i32;
+                        let height = (origin.height as f64
+                            - margin.y
+                            - (gap.height + size.height)
+                            * self.get_start_row(count, artifact_index) as f64)
+                            as i32;
+
+                        let game_image = self
+                            .capturer
+                            .capture_rect(yas::positioning::Rect {
+                                left,
+                                top,
+                                width,
+                                height,
+                            })
+                            .unwrap();
+                        Some(game_image)
+                    } else {
+                        None
+                    };
+
+
+                    artifact_index = artifact_index + 1;
 
                     // todo normalize types
                     if (star as i32) < self.scanner_config.min_star {
@@ -217,7 +287,14 @@ impl GenshinArtifactScanner {
                         break;
                     }
 
-                    if tx.send(Some(SendItem { panel_image: image, star })).is_err() {
+                    if tx
+                        .send(Some(SendItem {
+                            panel_image: image,
+                            star,
+                            list_image,
+                        }))
+                        .is_err()
+                    {
                         break;
                     }
 

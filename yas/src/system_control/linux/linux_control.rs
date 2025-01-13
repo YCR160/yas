@@ -1,4 +1,4 @@
-use enigo::{Enigo, MouseControllable, MouseButton};
+use enigo::{Enigo, MouseButton, MouseControllable};
 
 pub struct LinuxControl {
     enigo: Enigo,

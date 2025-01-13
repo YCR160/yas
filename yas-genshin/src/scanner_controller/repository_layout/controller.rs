@@ -10,7 +10,7 @@ use log::{error, info};
 
 use yas::capture::{Capturer, GenericCapturer};
 use yas::game_info::{GameInfo, UI};
-use yas::positioning::Pos;
+use yas::positioning::{Pos, Size};
 use yas::system_control::SystemControl;
 use yas::utils;
 use yas::window_info::{FromWindowInfoRepository, WindowInfoRepository};
@@ -40,9 +40,12 @@ pub struct GenshinRepositoryScanController {
     window_info: GenshinRepositoryScanControllerWindowInfo,
     system_control: SystemControl,
     capturer: Rc<dyn Capturer<RgbImage>>,
+
+    // artifact panel have different layout
+    is_artifact: bool,
 }
 
-fn calc_pool(row: &Vec<u8>) -> f32 {
+fn calc_pool(row: &[u8]) -> f32 {
     let len = row.len() / 3;
     let mut pool: f32 = 0.0;
 
@@ -60,7 +63,7 @@ fn color_distance(c1: &image::Rgb<u8>, c2: &image::Rgb<u8>) -> usize {
     let x = c1.0[0] as i32 - c2.0[0] as i32;
     let y = c1.0[1] as i32 - c2.0[1] as i32;
     let z = c1.0[2] as i32 - c2.0[2] as i32;
-    return (x * x + y * y + z * z) as usize;
+    (x * x + y * y + z * z) as usize
 }
 
 // constructor
@@ -68,13 +71,14 @@ impl GenshinRepositoryScanController {
     pub fn new(
         window_info_repo: &WindowInfoRepository,
         config: GenshinRepositoryScannerLogicConfig,
-        game_info: GameInfo
+        game_info: GameInfo,
+        is_artifact: bool,
     ) -> Result<Self> {
         let window_info = GenshinRepositoryScanControllerWindowInfo::from_window_info_repository(
             game_info.window.to_rect_usize().size(),
             game_info.ui,
             game_info.platform,
-            window_info_repo
+            window_info_repo,
         )?;
         let row = window_info.genshin_repository_item_row;
         let col = window_info.genshin_repository_item_col;
@@ -102,18 +106,22 @@ impl GenshinRepositoryScanController {
             scanned_count: 0,
 
             capturer: get_capturer()?,
+
+            is_artifact,
         })
     }
 
     pub fn from_arg_matches(
         window_info_repo: &WindowInfoRepository,
         arg_matches: &ArgMatches,
-        game_info: GameInfo
+        game_info: GameInfo,
+        is_artifact: bool,
     ) -> Result<Self> {
         Self::new(
             window_info_repo,
             GenshinRepositoryScannerLogicConfig::from_arg_matches(arg_matches)?,
-            game_info
+            game_info,
+            is_artifact,
         )
     }
 }
@@ -124,7 +132,7 @@ pub enum ReturnResult {
 }
 
 impl GenshinRepositoryScanController {
-    pub fn get_generator(object: Rc<RefCell<GenshinRepositoryScanController>>, item_count: usize) -> impl Coroutine<Yield = (), Return = Result<ReturnResult>> {
+    pub fn get_generator(object: Rc<RefCell<GenshinRepositoryScanController>>, item_count: usize) -> impl Coroutine<Yield=(), Return=Result<ReturnResult>> {
         let generator = #[coroutine] move || {
             let mut scanned_row = 0;
             let mut scanned_count = 0;
@@ -205,10 +213,10 @@ impl GenshinRepositoryScanController {
                     ScrollResult::TimeLimitExceeded => {
                         // error!("");
                         return Err(anyhow!("翻页超时，扫描终止……"));
-                    },
+                    }
                     ScrollResult::Interrupt => {
                         return Ok(ReturnResult::Interrupted);
-                    },
+                    }
                     _ => (),
                 }
 
@@ -223,11 +231,19 @@ impl GenshinRepositoryScanController {
 
     #[inline(always)]
     pub fn get_flag_color(&self) -> Result<image::Rgb<u8>> {
-        let pos = Pos {
-            x: self.window_info.flag_pos.x as i32 + self.game_info.window.left,
-            y: self.window_info.flag_pos.y as i32 + self.game_info.window.top
+        let mut pos_f64 = Pos {
+            x: self.window_info.flag_pos.x + self.game_info.window.left as f64,
+            y: self.window_info.flag_pos.y + self.game_info.window.top as f64,
         };
-        self.capturer.capture_color(pos)
+        if self.is_artifact {
+            pos_f64.x += self.window_info.artifact_panel_offset.width;
+            pos_f64.y += self.window_info.artifact_panel_offset.height;
+        }
+        let pos_i32 = Pos {
+            x: pos_f64.x as i32,
+            y: pos_f64.y as i32,
+        };
+        self.capturer.capture_color(pos_i32)
     }
 
     #[inline(always)]
@@ -257,11 +273,14 @@ impl GenshinRepositoryScanController {
         let origin = self.game_info.window.to_rect_f64().origin();
 
         let gap = self.window_info.item_gap_size;
-        let margin = self.window_info.scan_margin_pos;
+        let mut margin = self.window_info.scan_margin_pos;
         let size = self.window_info.item_size;
+        if self.is_artifact {
+            margin = margin + self.window_info.artifact_panel_offset;
+        }
 
         let left = origin.x + margin.x + (gap.width + size.width) * (col as f64) + size.width / 2.0;
-        let top = origin.y + margin.y + (gap.height + size.height) * (row as f64) + size.height / 2.0;
+        let top = origin.y + margin.y + (gap.height + size.height) * (row as f64) + size.height / 4.0;
 
         self.system_control.mouse_move_to(left as i32, top as i32).unwrap();
 
@@ -325,7 +344,7 @@ impl GenshinRepositoryScanController {
                 v => {
                     error!("Scrolling failed: {:?}", v);
                     return v;
-                },
+                }
             }
         }
 
@@ -345,7 +364,7 @@ impl GenshinRepositoryScanController {
         while now.elapsed().unwrap().as_millis() < self.config.max_wait_switch_item as u128 {
             let im = self.capturer.capture_relative_to(
                 self.window_info.pool_rect.to_rect_i32(),
-                self.game_info.window.origin()
+                self.game_info.window.origin(),
             )?;
 
             let pool = calc_pool(im.as_raw()) as f64;
@@ -383,14 +402,14 @@ impl GenshinRepositoryScanController {
                 UI::Desktop => {
                     self.system_control.mouse_scroll(length).unwrap();
                     utils::sleep(20);
-                },
+                }
                 UI::Mobile => {
                     if try_find {
                         self.system_control.mac_scroll_fast(length);
                     } else {
                         self.system_control.mac_scroll_slow(length);
                     }
-                },
+                }
             }
         }
     }
