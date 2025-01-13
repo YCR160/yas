@@ -387,13 +387,13 @@ impl StarRailRepositoryScanController {
         self.system_control.mouse_scroll(length).unwrap();
 
         #[cfg(target_os = "linux")]
-        self.system_control.mouse_scroll(length);
+        self.system_control.mouse_scroll(length).unwrap();
 
         #[cfg(target_os = "macos")]
         {
             match self.game_info.ui {
                 UI::Desktop => {
-                    self.system_control.mouse_scroll(length);
+                    self.system_control.mouse_scroll(length).unwrap();
                     utils::sleep(20);
                 },
                 UI::Mobile => {

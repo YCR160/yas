@@ -6,8 +6,9 @@ members = [
     "yas-starrail",
     "yas-derive",
     "yas-application",
-    "yas-wutheringwaves"
-, "yas-derive-wuthering-waves"]
+    # "yas-wutheringwaves",
+    # "yas-derive-wuthering-waves",
+]
 
 [profile.dev]
 opt-level = 1

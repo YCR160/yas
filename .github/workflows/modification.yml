@@ -122,4 +122,4 @@ jobs:
         run: rustup default nightly
 
       - name: Check
-        run: cargo check
+        run: cargo check --features capturer_libwayshot
