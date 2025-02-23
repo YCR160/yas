@@ -61,7 +61,8 @@ impl RelicSetName {
             RelicSetName::TheWindSoaringValorous => "TheWindSoaringValorous",
             RelicSetName::SacerdosRelivedOrdeal => "SacerdosRelivedOrdeal",
             RelicSetName::ScholarLostinErudition => "ScholarLostinErudition",
-
+            RelicSetName::HeroofTriumphantSong => "HeroofTriumphantSong",
+            RelicSetName::PoetofMourningCollapse => "PoetofMourningCollapse",
             RelicSetName::SpaceSealingStation => "SpaceSealingStation",
             RelicSetName::FleetoftheAgeless => "FleetoftheAgeless",
             RelicSetName::PanCosmicCommercialEnterprise => "PanCosmicCommercialEnterprise",
