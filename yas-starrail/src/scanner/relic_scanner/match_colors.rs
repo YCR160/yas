@@ -4,7 +4,7 @@ pub struct MatchColors {
     pub match_colors_rarity: [Rgb<u8>; 5],
     pub match_colors_lock: [Rgb<u8>; 3],
     pub match_colors_discard: [Rgb<u8>; 3],
-    pub match_colors_equipper: [(&'static str, Rgb<u8>); 53],
+    pub match_colors_equipper: [(&'static str, Rgb<u8>); 56],
 }
 
 pub const MATCH_COLORS: MatchColors = MatchColors {
@@ -36,6 +36,7 @@ pub const MATCH_COLORS: MatchColors = MatchColors {
         ("Blade", Rgb([191, 162, 162])),
         ("Boothill", Rgb([127, 95, 94])),
         ("Bronya", Rgb([83, 66, 83])),
+        ("Castorice", Rgb([236, 228, 238])),
         ("Clara", Rgb([181, 107, 129])),
         ("DanHeng", Rgb([124, 100, 100])),
         ("DanHengImbibitorLunae", Rgb([181, 169, 163])),
@@ -52,6 +53,7 @@ pub const MATCH_COLORS: MatchColors = MatchColors {
         ("Himeko", Rgb([177, 92, 85])),
         ("Hook", Rgb([190, 161, 86])),
         ("Huohuo", Rgb([230, 250, 250])),
+        ("Hyacine", Rgb([254, 250, 242])),
         ("Jingliu", Rgb([193, 194, 218])),
         ("JingYuan", Rgb([169, 154, 147])),
         ("Kafka", Rgb([126, 50, 80])),
@@ -75,6 +77,7 @@ pub const MATCH_COLORS: MatchColors = MatchColors {
         ("TheHerta", Rgb([205, 179, 180])),
         ("Tingyun", Rgb([127, 116, 57])),
         ("TopazNumby", Rgb([254, 250, 246])),
+        ("Tribbie", Rgb([69, 42, 63])),
         ("Welt", Rgb([158, 114, 99])),
         ("Xueyi", Rgb([250, 242, 230])),
         ("Yanqing", Rgb([255, 242, 232])),

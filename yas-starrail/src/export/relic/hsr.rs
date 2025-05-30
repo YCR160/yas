@@ -89,6 +89,8 @@ impl RelicSetName {
             RelicSetName::ScholarLostinErudition => "Scholar Lost in Erudition",
             RelicSetName::HeroofTriumphantSong => "Hero of Triumphant Song",
             RelicSetName::PoetofMourningCollapse => "Poet of Mourning Collapse",
+            RelicSetName::WarriorGoddessofSunandThunder => "Warrior Goddess of Sun and Thunder",
+            RelicSetName::WavestriderCaptain => "Wavestrider Captain",
             RelicSetName::SpaceSealingStation => "Space Sealing Station",
             RelicSetName::FleetoftheAgeless => "Fleet of the Ageless",
             RelicSetName::PanCosmicCommercialEnterprise => "Pan-Cosmic Commercial Enterprise",
@@ -107,6 +109,8 @@ impl RelicSetName {
             RelicSetName::ForgeoftheKalpagniLantern => "Forge of the Kalpagni Lantern",
             RelicSetName::LushakatheSunkenSeas => "Lushaka, the Sunken Seas",
             RelicSetName::TheWondrousBananAmusementPark => "The Wondrous BananAmusement Park",
+            RelicSetName::BoneCollectionsSereneDemesne => "Bone Collection's Serene Demesne",
+            RelicSetName::GiantTreeofRaptBrooding => "Giant Tree of Rapt Brooding",
         }
     }
 }

@@ -63,6 +63,8 @@ impl RelicSetName {
             RelicSetName::ScholarLostinErudition => "ScholarLostinErudition",
             RelicSetName::HeroofTriumphantSong => "HeroofTriumphantSong",
             RelicSetName::PoetofMourningCollapse => "PoetofMourningCollapse",
+            RelicSetName::WarriorGoddessofSunandThunder => "WarriorGoddessofSunandThunder",
+            RelicSetName::WavestriderCaptain => "WavestriderCaptain",
             RelicSetName::SpaceSealingStation => "SpaceSealingStation",
             RelicSetName::FleetoftheAgeless => "FleetoftheAgeless",
             RelicSetName::PanCosmicCommercialEnterprise => "PanCosmicCommercialEnterprise",
@@ -81,6 +83,8 @@ impl RelicSetName {
             RelicSetName::ForgeoftheKalpagniLantern => "ForgeoftheKalpagniLantern",
             RelicSetName::LushakatheSunkenSeas => "LushakatheSunkenSeas",
             RelicSetName::TheWondrousBananAmusementPark => "TheWondrousBananAmusementPark",
+            RelicSetName::BoneCollectionsSereneDemesne => "BoneCollectionsSereneDemesne",
+            RelicSetName::GiantTreeofRaptBrooding => "GiantTreeofRaptBrooding",
         };
         String::from(temp)
     }
